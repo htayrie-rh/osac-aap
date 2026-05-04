@@ -27,5 +27,5 @@
 
     - name: Call the selected SecurityGroup role
       ansible.builtin.include_role:
-        name: "osac.templates.{{ implementation_strategy }}"
+        name: "osac.templates.{{ implementation_strategy | replace('-', '_') }}"
         tasks_from: create_security_group
