@@ -56,14 +56,5 @@ argument_specs:
               `permittedHostDevices` configuration.
       template_parameters:
         type: dict
-        description: VM configuration parameters
-        options:
-          exposed_ports:
-            description: >
-              Ports to expose on the VM for ingress traffic.
-              The syntax is a comma-separated list of `<port>/<protocol>` pairs, where `<protocol>` is either `tcp` or `udp`.
-              For example, `22/tcp,80/tcp` will expose tcp ports 22 and 80 on the VM.
-              Default is OS-dependent: `22/tcp` for Linux, `3389/tcp` for Windows. The role applies
-              the appropriate default at runtime based on the inferred or specified `guest_os_family`.
-            type: str
-            required: false
+        required: false
+        description: Template parameters for the VM.

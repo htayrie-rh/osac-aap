@@ -26,7 +26,6 @@
           interfaces:
             - name: default
               masquerade: {}
-          rng: {}
         features:
           smm:
             enabled: true
@@ -60,6 +59,16 @@
           bootloader:
             efi:
               secureBoot: true
+        clock:
+          utc: {}
+          timer:
+            hpet:
+              present: false
+            pit:
+              tickPolicy: delay
+            rtc:
+              tickPolicy: catchup
+            hyperv: {}
         devices:
           disks:
             - name: root-disk
@@ -69,6 +78,7 @@
             - name: default
               masquerade: {}
           tpm: {}
+          rng: {}
         features:
           smm:
             enabled: true
