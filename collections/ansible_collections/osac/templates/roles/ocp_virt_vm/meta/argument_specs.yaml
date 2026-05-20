@@ -17,7 +17,8 @@ argument_specs:
           in the KubeVirt domain devices spec, and will also ensure that the
           `HyperConverged` CR (`kubevirt-hyperconverged` in the `openshift-cnv`
           namespace) permits these host devices under
-          `spec.permittedHostDevices.pciHostDevices`.
+          `spec.virtualization.permittedHostDevices.pciHostDevices` (v1) or
+          `spec.permittedHostDevices.pciHostDevices` (v1beta1).
 
           The PCI vendor and product ID for a given GPU can be found by running
           `lspci -nn | grep -i nvidia` on a node that has the device.

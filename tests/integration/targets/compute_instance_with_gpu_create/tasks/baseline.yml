@@ -45,18 +45,39 @@
 
     - name: Read HyperConverged CR
       kubernetes.core.k8s_info:
-        api_version: hco.kubevirt.io/v1beta1
+        api_version: hco.kubevirt.io/v1
         kind: HyperConverged
         name: kubevirt-hyperconverged
         namespace: openshift-cnv
       register: hc_cr
 
-    - name: Verify GPU device was registered in HyperConverged CR
+    - name: Ensure HyperConverged CR exists
       ansible.builtin.assert:
         that:
           - hc_cr.resources | length == 1
-          - hc_cr.resources[0].spec.permittedHostDevices.pciHostDevices is defined
-          - hc_cr.resources[0].spec.permittedHostDevices.pciHostDevices | length == 1
-          - hc_cr.resources[0].spec.permittedHostDevices.pciHostDevices[0].pciDeviceSelector == '10DE:2901'
-          - hc_cr.resources[0].spec.permittedHostDevices.pciHostDevices[0].resourceName == 'nvidia.com/GB100'
+        fail_msg: "Expected exactly one HyperConverged CR, got: {{ hc_cr.resources | default([]) | length }}"
+
+    - name: Resolve pciHostDevices from HyperConverged CR
+      ansible.builtin.set_fact:
+        hc_pci_host_devices: >-
+          {{
+            (hc_cr.resources[0].spec.virtualization.permittedHostDevices.pciHostDevices | default([]))
+            if hc_cr.resources[0].spec.virtualization is defined
+            else (hc_cr.resources[0].spec.permittedHostDevices.pciHostDevices | default([]))
+          }}
+
+    - name: Find matching GPU host device entries
+      ansible.builtin.set_fact:
+        hc_matching_gpu_devices: >-
+          {{
+            hc_pci_host_devices
+            | selectattr('pciDeviceSelector', 'equalto', '10DE:2901')
+            | selectattr('resourceName', 'equalto', 'nvidia.com/GB100')
+            | list
+          }}
+
+    - name: Verify GPU device was registered in HyperConverged CR
+      ansible.builtin.assert:
+        that:
+          - hc_matching_gpu_devices | length == 1
         fail_msg: "GPU device not registered in HyperConverged CR: {{ hc_cr.resources }}"
