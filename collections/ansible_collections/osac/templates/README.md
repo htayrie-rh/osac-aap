@@ -63,13 +63,14 @@ OpenShift 4.17 cluster with GitHub OAuth authentication pre-configured.
 ### VM Templates
 
 #### `ocp_virt_vm`
-Simple virtual machine template with configurable resources and cloud-init support.
+Virtual machine template for OpenShift Virtualization: **Linux and Windows** guests use the same template ID. Linux is the default. Windows is selected when any of the following is true (in order): role var `guest_os_family: windows` (e.g. extra vars), annotation `osac.openshift.io/guest-os-family: windows` on the `ComputeInstance`, or `spec.image.sourceRef` contains the substring `containerdisks/windows` (an informal convention in some community Windows disk images — not a Microsoft-official image catalog). **Windows requires** `spec.image.sourceRef` to point at **your** Windows container disk (golden image or registry path you maintain); this template does not ship a default. Windows uses sysprep / CloudBase-Init paths, Hyper-V domain defaults, and matching delete cleanup.
 
 **Parameters:**
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `exposed_ports` | string | "22/tcp" | Comma-separated ports (e.g., "22/tcp,80/tcp") |
+| `guest_os_family` | string | `linux` | `linux` or `windows` — overrides inference when set before the role runs |
+| `exposed_ports` | string | "22/tcp" (linux) / "3389/tcp" (windows) | Comma-separated ports (e.g., "22/tcp,80/tcp") |
 
 The following are read from the `ComputeInstance` spec:
 
@@ -83,6 +84,8 @@ The following are read from the `ComputeInstance` spec:
 | `spec.sshKey` | SSH public key for VM access |
 | `spec.userDataSecretRef.name` | Secret containing cloud-init user data |
 | `spec.additionalDisks` | Additional data disks |
+
+**Windows-specific behavior** (when guest OS resolves to `windows`): hostname via sysprep unattend.xml (15-character NetBIOS limit), enhanced Hyper-V enlightenments and clock policy, SATA sysprep CD-ROM, optional CloudBase-Init user-data secret, 900s ready wait.
 
 ## Usage
 
@@ -166,7 +169,7 @@ single file: `meta/osac.yaml`.
 3. Implement provisioning tasks in `roles/my_vm_template/tasks/create.yaml`
 4. Implement cleanup tasks in `roles/my_vm_template/tasks/delete.yaml`
 
-See `roles/ocp_virt_vm` for a complete example.
+See roles/ocp_virt_vm for more examples
 
 ## Architecture
 

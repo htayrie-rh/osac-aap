@@ -32,7 +32,12 @@
     - name: Set storage classes context for downstream roles
       ansible.builtin.set_fact:
         tenant_storage_class_storage_classes: "{{ tenant_storage_classes }}"
-        tenant_storage_class_tenant_name: "{{ compute_instance.status.tenantReference.name }}"
+        tenant_storage_class_tenant_name: >-
+          {{
+            compute_instance.status.tenantReference.name
+            if compute_instance.status is defined and compute_instance.status.tenantReference is defined
+            else (compute_instance.metadata.annotations | default({})).get('osac.openshift.io/tenant', 'unknown')
+          }}
 
   tasks:
 
