@@ -1,7 +1,8 @@
 ---
 # VAST ensure_storage_class: creates CSI Secret + per-tier StorageClasses.
 # CRITICAL SECURITY: CSI Secret uses per-tenant user credentials ONLY.
-# Admin credentials are NEVER loaded or referenced in this file.
+# Admin credentials are loaded (via read_credentials.yaml) for VMS API calls
+# but are NEVER written into the CSI Secret or any tenant-namespace resource.
 
 - name: Fail if provisioning target is not yet supported
   when: _provisioning_target != 'vmaas'
