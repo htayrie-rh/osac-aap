@@ -67,6 +67,21 @@ the namespace where AAP is deployed.
 The cluster fulfillment needs to access the Kube API of the cluster it runs on,
 so we expect a service account `osac-sa` to exists with enough rights.
 
+### Compute instance operations environment variables
+
+Compute instance (VMaaS) job templates run in the
+`compute-instance-operations-ig` instance group. Credentials and configuration
+for VM operations are injected from a dedicated secret:
+
+- `OS_*`: OpenStack application credentials (when required by the deployment)
+
+These variables must be defined in a secret named
+`compute-instance-operations-ig` in the namespace where AAP is deployed.
+
+The compute instance instance group also optionally mounts `storage-operations-ig`
+for JIT tenant storage during VM provisioning, and may mount a remote cluster
+kubeconfig when `REMOTE_CLUSTER_KUBECONFIG_SECRET_NAME` is configured.
+
 ## Deploy a local AAP installation using CRC
 
 ### Download and deploy CRC
