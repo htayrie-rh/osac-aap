@@ -20,7 +20,10 @@
 #   Test 5 (Windows with explicit image accepted):
 #     ansible-playbook ... -e test_windows_with_image=true
 #
-#   Test 6 (security group labels propagated to VM):
+#   Test 6 (Unknown OS value falls through to linux defaults):
+#     ansible-playbook ... -e test_unknown_os_fallback=true
+#
+#   Test 7 (security group labels propagated to VM):
 #     ansible-playbook ... -e test_create_sg_labels=true
 
 # ──────────────────────────────────────────────────────────────
@@ -247,6 +250,7 @@
             default_spec: "{{ _guest_os_windows_default_spec }}"
             default_arg_specs: "{{ _guest_os_windows_default_arg_specs }}"
             template_parameters: {}
+            vm_enable_sysprep: false
 
         - name: Set compute instance name
           ansible.builtin.set_fact:
@@ -263,8 +267,55 @@
               - vm_image_source == "registry.example.com/osac/windows-golden:ltsc2022"
             fail_msg: "Expected vm_image_source from spec, got {{ vm_image_source | default('undefined') }}"
 
+# Test 6: Unknown OS value falls through to linux defaults
+# Expected: CPU=2, memory=2Gi, disk=10Gi (linux defaults, not Windows)
 # ──────────────────────────────────────────────────────────────
-# Test 6: Security group labels are propagated to default_vm_labels
+- name: "Test ocp_virt_vm -- Unknown OS value falls through to linux behavior"
+  hosts: localhost
+
+  collections:
+    - osac.templates
+
+  vars:
+    compute_instance_label: "osac.openshift.io/computeinstance"
+
+  tasks:
+    - when: test_unknown_os_fallback | default(false) | bool
+      block:
+        - name: Load ocp_virt_vm role defaults
+          ansible.builtin.include_vars:
+            file: "{{ playbook_dir }}/../defaults/main.yaml"
+
+        - name: Load unknown OS fixture with guestOSFamily freebsd
+          ansible.builtin.set_fact:
+            compute_instance: "{{ lookup('file', 'fixtures/computeinstance-unknown-os-test.yaml') | from_yaml }}"
+            template_parameters: {}
+
+        - name: Run create_validate
+          ansible.builtin.include_role:
+            name: osac.templates.ocp_virt_vm
+            tasks_from: create_validate.yaml
+
+        - name: Assert CPU cores match linux default not Windows
+          ansible.builtin.assert:
+            that:
+              - vm_cpu_cores | int == 2
+            fail_msg: "Expected linux default (2 cores), got {{ vm_cpu_cores | default('undefined') }}"
+
+        - name: Assert memory matches linux default not Windows
+          ansible.builtin.assert:
+            that:
+              - vm_memory == "2Gi"
+            fail_msg: "Expected linux default (2Gi), got {{ vm_memory | default('undefined') }}"
+
+        - name: Assert boot disk size matches linux default not Windows
+          ansible.builtin.assert:
+            that:
+              - vm_boot_disk_size == "10Gi"
+            fail_msg: "Expected linux default (10Gi), got {{ vm_boot_disk_size | default('undefined') }}"
+
+# ──────────────────────────────────────────────────────────────
+# Test 7: Security group labels are propagated to default_vm_labels
 # Expected: default_vm_labels includes osac.openshift.io/<sg-ref>: ""
 #           for each securityGroupRef across all spec.networkAttachments
 # ──────────────────────────────────────────────────────────────
