@@ -44,11 +44,20 @@
         patch:
           - op: remove
             path: /spec/clusterDeploymentName
+      register: _unbind_patch_result
       loop: "{{ manage_agents_reclaim_list.resources }}"
       loop_control:
         loop_var: agent
         label: "Unbind agent {{ agent.metadata.name }}"
       failed_when: false
+
+    - name: Report unbind failures
+      ansible.builtin.debug:
+        msg: "Failed to unbind agent {{ item.agent.metadata.name }}: {{ item.msg | default('unknown error') }}"
+      loop: "{{ _unbind_patch_result.results | selectattr('failed', 'defined') | selectattr('failed') | list }}"
+      loop_control:
+        label: "{{ item.agent.metadata.name }}"
+      when: _unbind_patch_result.results | selectattr('failed', 'defined') | selectattr('failed') | list | length > 0
 
     - name: Wait for agents to return to available state
       kubernetes.core.k8s_info:
@@ -60,7 +69,7 @@
       register: manage_agents_reclaim_status
       until: >-
         manage_agents_reclaim_status.resources | length == 0
-        or manage_agents_reclaim_status.resources[0].status.debugInfo.state
+        or (manage_agents_reclaim_status.resources[0].status.debugInfo.state | default(''))
            in ['known-unbound', 'known', 'discovering-unbound']
       retries: 60
       delay: 10
