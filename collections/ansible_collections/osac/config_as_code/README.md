@@ -70,13 +70,15 @@ so we expect a service account `osac-sa` to exists with enough rights.
 ### Compute instance operations environment variables
 
 Compute instance (VMaaS) job templates run in the
-`compute-instance-operations-ig` instance group. Credentials and configuration
-for VM operations are injected from a dedicated secret:
+`compute-instance-operations-ig` instance group. The default KubeVirt path
+(`ocp_virt_vm`) uses the in-cluster `osac-sa` service account and does not
+require credentials in a dedicated secret.
 
-- `OS_*`: OpenStack application credentials (when required by the deployment)
-
-These variables must be defined in a secret named
-`compute-instance-operations-ig` in the namespace where AAP is deployed.
+The pod spec optionally mounts a secret named
+`compute-instance-operations-ig`. Create it only when a deployment-specific
+compute template needs extra environment variables. OpenStack credentials are
+not required for VMaaS; Neutron networking uses `network-fulfillment-ig`, and
+cluster/ESI floating-IP workflows use `cluster-fulfillment-ig`.
 
 The compute instance instance group also optionally mounts `storage-operations-ig`
 for JIT tenant storage during VM provisioning, and may mount a remote cluster

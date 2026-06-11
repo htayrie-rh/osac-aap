@@ -36,6 +36,7 @@ spec:
       envFrom:
         - secretRef:
             name: compute-instance-operations-ig
+            optional: true
         - secretRef:
             name: storage-operations-ig
             optional: true
