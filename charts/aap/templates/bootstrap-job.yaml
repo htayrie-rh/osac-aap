@@ -87,6 +87,8 @@ spec:
             name: {{ .Values.configAsCode.secret }}
             optional: true
         env:
+        - name: AAP_EE_IMAGE
+          value: {{ .Values.bootstrap.eeImage | default .Values.bootstrap.image | quote }}
         - name: AAP_PASSWORD
           valueFrom:
             secretKeyRef:
