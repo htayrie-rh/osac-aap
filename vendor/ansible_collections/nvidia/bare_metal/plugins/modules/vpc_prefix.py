@@ -13,8 +13,7 @@ DOCUMENTATION = r'''
 module: nvidia.bare_metal.vpc_prefix
 short_description: Manage VPC Prefix resources
 description:
-- VPC Prefix is a network prefix belonging to an IP Block allocated to a Tenant. Tenant can use VPC Prefixes to enable network
-  connectivity between their Instances.
+- VPC Prefixes are networking constructs that connect a set of bare metal machines.
 version_added: 1.0.0
 author: NVIDIA Bare Metal Manager Dev Team
 extends_documentation_fragment:
@@ -27,7 +26,7 @@ options:
   ip_block_id:
     type: str
     description:
-    - ID of the IP Block to allocate the VPC Prefix from
+    - ip_block_id parameter.
   name:
     type: str
     description:

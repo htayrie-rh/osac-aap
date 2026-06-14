@@ -13,7 +13,8 @@ DOCUMENTATION = r'''
 module: nvidia.bare_metal.sku_info
 short_description: Retrieve SKU information
 description:
-- SKU (Stock Keeping Unit) defines one or more hardware configurations or Machine Bill of Materials (BOM).
+- SKU (Stock Keeping Unit) operations allow Infrastructure Providers to retrieve hardware configurations discovered at their
+  sites.
 version_added: 1.0.0
 author: NVIDIA Bare Metal Manager Dev Team
 extends_documentation_fragment:

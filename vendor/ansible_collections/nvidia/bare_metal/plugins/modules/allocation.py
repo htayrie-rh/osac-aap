@@ -13,7 +13,7 @@ DOCUMENTATION = r'''
 module: nvidia.bare_metal.allocation
 short_description: Manage Allocation resources
 description:
-- Allocations are the mechanism by which Provider can delegate Network and Compute resources to Tenant.
+- Allocation operations
 version_added: 1.0.0
 author: NVIDIA Bare Metal Manager Dev Team
 extends_documentation_fragment:
@@ -43,7 +43,6 @@ options:
         type: str
         description:
         - resource_type parameter.
-        required: true
         choices:
         - InstanceType
         - IPBlock
@@ -59,7 +58,7 @@ options:
   description:
     type: str
     description:
-    - Detailed description for the Allocation
+    - description parameter.
   id:
     type: str
     description:
@@ -67,11 +66,11 @@ options:
   name:
     type: str
     description:
-    - Concise and descriptive name for the Allocation
+    - name parameter.
   site_id:
     type: str
     description:
-    - ID of the Site where resources should be allocated
+    - site_id parameter.
   state:
     type: str
     description:
@@ -82,7 +81,7 @@ options:
   tenant_id:
     type: str
     description:
-    - ID of the Tenant that should receive the Allocation
+    - tenant_id parameter.
   wait:
     type: bool
     description:
@@ -129,7 +128,7 @@ ARGUMENT_SPEC = dict(
 allocation_constraints=dict(type='list', elements='dict', options=dict(
     constraint_type=dict(type='str', required=True, choices=['Reserved', 'OnDemand', 'Preemptible']),
     constraint_value=dict(type='int', required=True),
-    resource_type=dict(type='str', required=True, choices=['InstanceType', 'IPBlock']),
+    resource_type=dict(type='str', choices=['InstanceType', 'IPBlock']),
     resource_type_id=dict(type='str', required=True),
 )),
 allocation_id=dict(type='str'),

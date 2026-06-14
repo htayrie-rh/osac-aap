@@ -13,10 +13,8 @@ DOCUMENTATION = r'''
 module: nvidia.bare_metal.expected_machine_info
 short_description: Retrieve Expected Machine information
 description:
-- 'Expected Machine identifies a Machine that is expected to be discovered at a Site. Infrastructure Providers can pre-register
-  Expected Machines using BMC credentials
-
-  and serial numbers to help with Machine discovery and ingestion.'
+- Expected Machine operations allow Infrastructure Providers to pre-register machines that are expected to be discovered at
+  a site.
 version_added: 1.0.0
 author: NVIDIA Bare Metal Manager Dev Team
 extends_documentation_fragment:

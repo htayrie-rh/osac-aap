@@ -13,8 +13,7 @@ DOCUMENTATION = r'''
 module: nvidia.bare_metal.subnet_info
 short_description: Retrieve Subnet information
 description:
-- Subnet is a network prefix belonging to an IP Block allocated to a Tenant. Tenant can use Subnets to enable network connectivity
-  between their Instances.
+- Subnets are networking constructs that connect a set of bare metal machines.
 version_added: 1.0.0
 author: NVIDIA Bare Metal Manager Dev Team
 extends_documentation_fragment:

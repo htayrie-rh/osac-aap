@@ -13,8 +13,7 @@ DOCUMENTATION = r'''
 module: nvidia.bare_metal.ssh_key_group
 short_description: Manage SSH Key Group resources
 description:
-- SSH Key Groups allow grouping several SSH Keys together so they can be synced to Sites and used to access the Serial Console
-  of Instances.
+- SSH Key Groups allow binding several SSH Keys together so they can be applied to Sites or other entities as a unit
 version_added: 1.0.0
 author: NVIDIA Bare Metal Manager Dev Team
 extends_documentation_fragment:

@@ -13,11 +13,7 @@ DOCUMENTATION = r'''
 module: nvidia.bare_metal.infiniband_partition_info
 short_description: Retrieve InfiniBand Partition information
 description:
-- 'InfiniBand (IB) is a high-performance, low-latency networking standard designed for interconnecting servers and storage
-  in HPC (High-Performance Computing) and AI systems,
-
-  utilizing RDMA (Remote Direct Memory Access) to reduce CPU overhead. InfiniBand Partitions are used to group Machines into
-  logical partitions for network isolation and load distribution.'
+- Partitions provide networking support for high-performance computing that features very high throughput and very low latency.
 version_added: 1.0.0
 author: NVIDIA Bare Metal Manager Dev Team
 extends_documentation_fragment:

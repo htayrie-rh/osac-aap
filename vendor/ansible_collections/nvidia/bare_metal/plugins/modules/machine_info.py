@@ -13,8 +13,7 @@ DOCUMENTATION = r'''
 module: nvidia.bare_metal.machine_info
 short_description: Retrieve Machine information
 description:
-- Machine is a physical server that contains CPUs, GPUs, memory, storage, and networking hardware. Machines are the physical
-  building blocks of a Site.
+- Machine operations
 version_added: 1.0.0
 author: NVIDIA Bare Metal Manager Dev Team
 extends_documentation_fragment:

@@ -32,10 +32,6 @@ options:
     type: str
     description:
     - Filter TenantAccounts by Infrastructure Provider ID
-  query:
-    type: str
-    description:
-    - Search string to filter Tenant Accounts by account number, tenant org, or tenant org display name
   tenant_id:
     type: str
     description:
@@ -80,7 +76,6 @@ ARGUMENT_SPEC = dict(
 account_id=dict(type='str'),
 id=dict(type='str'),
 infrastructure_provider_id=dict(type='str'),
-query=dict(type='str'),
 tenant_id=dict(type='str'),
 )
 
@@ -88,7 +83,7 @@ RESOURCE_CONFIG = {
     'resource_path': '/v2/org/{org}/carbide/tenant/account',
     'resource_item_path': '/v2/org/{org}/carbide/tenant/account/{accountId}',
     'id_param': 'accountId',
-    'filter_fields': ['infrastructure_provider_id', 'tenant_id', 'query'],
+    'filter_fields': ['infrastructure_provider_id', 'tenant_id'],
 }
 
 

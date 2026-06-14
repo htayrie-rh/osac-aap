@@ -13,10 +13,8 @@ DOCUMENTATION = r'''
 module: nvidia.bare_metal.expected_power_shelf
 short_description: Manage Expected Power Shelf resources
 description:
-- 'Expected Power Shelf identifies a Power Shelf that is expected to be discovered at a Site. Infrastructure Providers can
-  pre-register Expected Power Shelves using BMC
-
-  credentials and serial numbers to help with Power Shelf discovery and ingestion.'
+- Expected Power Shelf operations allow Infrastructure Providers to pre-register power shelves that are expected to be discovered
+  at a site.
 version_added: 1.0.0
 author: NVIDIA Bare Metal Manager Dev Team
 extends_documentation_fragment:
