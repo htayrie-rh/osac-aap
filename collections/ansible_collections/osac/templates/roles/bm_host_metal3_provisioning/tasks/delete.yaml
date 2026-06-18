@@ -36,7 +36,7 @@
     - name: Remove image and networkData from BMH
       when: bmh_has_image | bool
       block:
-        - name: Patch BareMetalHost to remove image and networkData
+        - name: Patch BareMetalHost to remove image, networkData, and userData
           kubernetes.core.k8s:
             api_version: metal3.io/v1alpha1
             kind: BareMetalHost
@@ -47,6 +47,7 @@
               spec:
                 image: null
                 networkData: null
+                userData: null
 
         - name: Wait for BMH to reach available or ready state
           kubernetes.core.k8s_info:
@@ -65,6 +66,14 @@
         kind: Secret
         namespace: "{{ bmh_namespace }}"
         name: "{{ bmh_name }}-network-data"
+        state: absent
+
+    - name: Delete userData Secret
+      kubernetes.core.k8s:
+        api_version: v1
+        kind: Secret
+        namespace: "{{ bmh_namespace }}"
+        name: "{{ bmh_name }}-user-data"
         state: absent
 
 - name: Metal3 deprovisioning completed
